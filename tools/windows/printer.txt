@@ -1,0 +1,5 @@
+[SHELL]
+Command=2
+IconFile=\\<IP>\<SHARE>\something.ico
+[Taskbar]
+Command=ToggleDesktop

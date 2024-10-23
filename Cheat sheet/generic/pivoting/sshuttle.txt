@@ -1,0 +1,10 @@
+- sshuttle : 
+    - description : 
+        - create a new interface
+    - source : 
+        - github : https://github.com/sshuttle/
+        - apt installation : sudo apt install sshuttle
+    - syntax : 
+        - random IP : 
+            - automatically detect subnet : sshuttle -r VICTIM_USER@VICTIM_IP --ssh-cmd "ssh -i KEYFILE" -x VICTIM_IP -N
+            - explicit subnet : sshuttle -r VICTIM_USER@VICTIM_IP SUBNET --ssh-cmd "ssh -i KEYFILE" -x VICTIM_IP

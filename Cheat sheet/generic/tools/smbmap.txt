@@ -1,0 +1,9 @@
+- smbmap
+    - u USERNAME 
+    - p PASSWORD 
+    - d DIRECTORY 
+    - H TARGET_IP 
+    - x COMMAND
+    - r DRIVE(C$, D$, E$, ...)
+    - --upload SOURCE_LOCAL_FILE DESTINATION_REMOTE_PATH
+    - --download REMOTE_FILE

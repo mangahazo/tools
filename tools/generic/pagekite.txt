@@ -1,0 +1,2 @@
+pagekite.py 80 yourname.pagekite.me
+python -m http.server 80

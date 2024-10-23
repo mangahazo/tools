@@ -1,0 +1,46 @@
+- port state: 
+    - open : a service is listening 
+    - closed : no service listening
+    - filtered : a firewall block that port (nmap cannot determine if the port is open or not)
+    - Unfiltered : the port is accessible but nmap cannot determine whether it is open or not (usualy encountered using -sA )
+    - open|filtered : nmap cannot determine whether the port is open or filtered
+    - closed|filtered : whether closed or filtered
+
+- TCP FLAGS: 
+    - URG : rocessed immediately without consideration of having to wait on previously sent TCP segments
+    - ACK: Acknowledgement
+    - PSH: Push flag asking TCP to pass the data to the application promptly
+    - RST: Reset flag is used to reset the connection.
+    - SYN: Synchronize flag is used to initiate a TCP 3-way handshake and synchronize sequence numbers with the other host. 
+    - FIN: The sender has no more data to send.
+
+- nmap scan options:
+    - by default, nmap scan the 1000 most used port
+    - F : only scan 100 most used port
+    - sT : complet a 3 way handshake and send rst directly 
+        - if not used as root, only discover TCP port
+    - sS : send SYN and if return SYN/ACK, the port is open. Then close the port immediately without completing 3 way handshake.
+    - sU : scan UDP port. If it respond to unreachable, it is closed
+    - p[PORT]
+        - specify the port
+        - -p23,24,25 : enumerate port
+        - -p1-100 : range of port
+    - -p- : scann all 65535 ports
+    - T[SPEED]:
+        - specify how speed the scan is
+        - SPEED: 
+            - paranoid (0)
+            - sneaky (1)
+            - polite (2)
+            - normal (3)
+            - aggressive (4)
+            - insane (5)
+        - in real world, prefere T1 for safety and accuracy of result
+        - in CTF, prefere T4 for its speed
+        - default value : T3 
+    - --min-rate/--max-rate (alternative to -T[SPEED])
+        - specify how much packet per second will be send
+        - ex: 
+            - --min-rate 10: send at least 10 packet per  second
+            - --max-rate 10 : send at most 10 packet per second
+    - --min-parallelism/ --max-parallelism : control the number of prob running in parallele

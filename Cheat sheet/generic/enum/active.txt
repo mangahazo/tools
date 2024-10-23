@@ -1,0 +1,177 @@
+- static files : 
+    - robot.txt/robots.txt
+    - sitemap.xml/sitemaps.xml
+
+- zonetransfer : 
+    - dsnrecon -d DOMAIN -t axfr  
+    - dig axfr @<IP> <DOMAIN>
+
+- subdomain bruteforce :
+    - fierce --domain DOMAIN --subdomain-file SUBDOMAIN_FILE
+    - knockpy DOMAIN [-w SUBDOMAIN_FILE]
+    - nmap --script
+    - searchsploit
+    - nikto
+    - dirb/gobuster/dirbuster
+    - wfuzz/ffuf
+    - cmsmap
+    - wpscan
+
+- automated scan : 
+    - sniper :
+        - active : sniper -t DOMAIN
+        - passive : sniper -t DOMAIN -m stealth -o -re
+    - amass :
+        - enumeration : amas enum -d DOMAIN
+    - recon-ng
+
+- download zhole site
+    - httrack
+
+- ping 
+    - most used command : ping -c [N] DOMAIN_NAME
+        - c [N] : send N ping request to DOMAIN_NAME
+    - command that send a packet and if the server reply, it is active
+
+- traceroute
+    - try to enumerate the route of a packet
+    - syntax: 
+        - linux : traceroute DOMAIN_NAME
+        - windows : tracert DOMAIN_NAME
+
+- telnet (a non secure version of ssh)
+    - use this not to have a connexion but to grab banners
+    - Of particular interest for us is discovering the type and version of the installed web server
+
+    - syntax : telnet DOMAIN_NAME PORT
+        - After typing enter, it display some output, after that, type the HTTP request and type enter twice
+        exemple : 
+            > telnet 192.168.1.1 80
+            < [some output]
+            > GET / HTTP/1.1
+            < [The result needed]
+
+- nc (netcat)
+    - command that can act like client to connect to some server
+        - like telnet in syntax and use
+
+    - command that can act like server to receive connexion
+        - syntax most commonly used: 
+            - nc -nlvp PORT
+            - options : 
+                -l : listening
+                -v : verbose
+                -n : Numeric only; no resolution of hostnames via DNS
+                -p : port
+
+
+
+- records : 
+    - A : ipv4
+    - AAAA : ipv6
+    - NS : domain name Server
+    - MX : email Server
+    - CNAME : domain aliases
+    - TXT : text records
+    - HINFO : host informations
+    - SOA : domain authority
+    - SRV : service records
+    - PTE : resolve IP to hostname
+- dnsenum
+- dig
+- fierce
+- nmap -sn (host discovery)
+- netdiscover -i INTERFACE -r CIDR
+- ping TARGET_IP
+- fping -a -g TARGET_CIDR
+- nmap --script-help=SCRIPT_NAME
+- nmap script :
+    - mongodb : 
+        - default port : 6421
+        - mongodb-databases
+        - mongodb-info
+        - mongodb-brute
+    - memcached : 
+        - default port : 41288
+        - memcached-info
+    - ftp : 
+        - default port : 21
+        - ftp-anon
+        - ftp-brute
+        - ftp-syst
+    - ssh : 
+        - ssh2-enum-algos
+        - ssh-hostkey
+            - script-args ssh_hostkey=full
+        - ssh-auth-methods
+            - script-args ssh.user=USERNAME
+    - smb (microsoft-ds)
+        - default port : 445, 3389
+        - smb-os-discovery
+        - smb2-security-mode
+        - smb2-time
+        - port 445:
+            - smb-protocols
+            - smb-security-mode
+            - smb-enum-sessions
+                - script-args : smbusername=USERNAME,smbpassword=PASSWORD
+            - smb-enum-shares
+                - IPC : anonymous session
+                - script-args : smbusername=USERNAME,smbpassword=PASSWORD
+            - smb-enum-users
+                - script-args : smbusername=USERNAME,smbpassword=PASSWORD
+            - smb-server-stats
+                - script-args : smbusername=USERNAME,smbpassword=PASSWORD
+            - smb-enum-domains
+                - script-args : smbusername=USERNAME,smbpassword=PASSWORD
+            - smb-enum-groups
+                - script-args : smbusername=USERNAME,smbpassword=PASSWORD
+            - smb-enum-services
+                - script-args : smbusername=USERNAME,smbpassword=PASSWORD
+            - smb-ls
+    - http : 
+        - default port : 80,443
+        - http-enum
+        - http-headers
+        - http-methods
+            - script-args : http-methods.url-path=URL_PATH
+        - http-webdav-scan
+            - script-args : http-methods.url-path=URL_PATH
+        - banner
+    - mysql :
+        - default port : 3306
+        - mysql-info
+        - mysql-users
+            - script-args : mysqluser=USERNAME,mysqlpass=PASSWORD
+        - mysql-databases
+            - script-args : mysqluser=USERNAME,mysqlpass=PASSWORD
+        - mysql-variables
+            - script-args : mysqluser=USERNAME,mysqlpass=PASSWORD
+            - most useful : datadir
+        - mysql-audit
+            - script-args : mysql-audit.user=USERNAME,mysql-audit.pass=PASSWORD,mysql-audit.filename='/usr/share/nmap/nselib/data/mysql-cis.audit'
+        - mysql-dump-hashes
+            - script-args : username=USERNAME,password=PASSWORD
+        - mysql-query
+            - script-args : query=QUERY,username=USERNAME,password=PASSWORD
+    - ms-sql
+        - default port : 1433
+        - ms-sql-info
+        - ms-sql-ntlm-info
+            - script-args : mssql.instance-port=PORT(1433)
+        - ms-sql-brute
+            - script-args : userdb=USER_LIST,passdb=PASSWORD_LIST
+        - ms-sql-empty-password
+        - ms-sql-query
+            - script-args : ms-sql-query.query=QUERY,mssql.username=USERNAME,mssql.password=PASSWORD
+        - ms-sql-dump-hashes
+            - script-args : mssql.username=USERNAME,mssql.password=PASSWORD
+        - ms-sql-xp-cmdshell
+            - script-args : mssql.username=USERNAME,mssql.password=PASSWORD,ms-sql-xp-cmdshell.cmd=CMD
+- ids evasion
+    - nmap -f [OPTIONS] TARGET_IP
+- firewall detection
+    - nmap -sA -p[PORTS] TARGET_IP
+- decoy : 
+    - nmap -D DECOY_IP1[,DECOY_IPS] [OPTIONS] TARGET_IP
+    - nmap -g DESIRED_SOURCE_PORT [OPTIONS] TARGET_IP

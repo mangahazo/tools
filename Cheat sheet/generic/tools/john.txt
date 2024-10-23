@@ -1,0 +1,34 @@
+- base syntax : john [OPTIONS] [PATH]
+
+- automatic cracking : 
+    - john --wordlist=PATH_TO_WORDLIST PATH_TO_HASH
+- check the hash : 
+    - use https://hashes.com/en/tools/hash_identifier
+    - use hash_identifier : 
+        - source : wget https://gitlab.com/kalilinux/packages/hash-identifier/-/raw/kali/master/hash-id.py
+        - run : python hash-id.py
+
+- specific format : 
+    - john --format=FORMAT --wordlist=PATH_TO_WORDLIST PATH_TO_HASH
+    - windows format usually : nt
+    - linux format usually : sha512crypt
+
+- list all john's formats : 
+    - john --list=formats
+
+- word mangling : 
+    - john --single [--format=FORMT] PATH_TO_HASH
+
+- Create custom rules: 
+    - rule file : 
+        - package manager : 
+            /etc/john/john.conf
+        - manualy build
+            /opt/john/john.conf
+    - [List.Rules:THMRules] : define the name of the rule
+    - Az - Takes the word and appends it with the characters you define
+    - A0 - Takes the word and prepends it with the characters you define
+    - c - Capitalises the character positionally
+    
+- wiki page : 
+    - https://www.openwall.com/john/doc/RULES.shtml

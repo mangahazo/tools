@@ -1,0 +1,61 @@
+syntax : ffuf -u <URL> -w <WORDLIST|-> [OPTIONS]
+placeholder : 
+    default : FUZZ
+    non default : <ANYTHING> where anything is declared with wordlist : <WORDLIST>:<ANYTHING>
+
+-d '<DATA>': POST data 
+
+-X <HTTP-METHODS>: HTTP methods (POST,PUT...)
+
+-H <COMMA-SEPARATED-HEADERS>: headers (user-agents, ...)
+
+-w <PATH-TO-WORDLIST>: wordlist (path to wordlist or - for std input)
+
+-t <THREADS>: thread 
+
+-e <COMMA-SEPARATED-EXTENSIONS>: extension to append to FUZZ keyword
+
+-c : colorized output 
+
+-x <PROXY> : proxy : 
+    -x http://127.0.0.1:8080
+
+- replay-proxy <PROXY>: send only mathces to proxy 
+    -replay-proxy http://127.0.0.1:8080
+
+-ic : ignore comment on wordlists
+
+-of <FORMAT> -o <OUTPUT-FILE> : output format (md, csv, ...)
+    with -o : output file
+
+-request <FILE> : use raw http request file
+
+-r : follow redirects
+
+blacklist : 
+    - fs <SIZE>: ignore by size
+    - fr '<REGEX>': ignore by regex
+    - fc <HTTP-STATUS-CODE>: ignore by http status code
+    - fw <NUMBER-OF-WORDS>: ignore by words
+    - fl <NUMBER-OF-LINES>: ignore by number of line
+
+whitelist (like for blacklist) : 
+    - ms : only accept size
+    - mr : only accept by regex
+    - mc : only accept http status code
+    - mw : only accept by words
+    - ml : only accept by number of lines
+
+example usage : 
+    subdomain enumeration : 
+        - ffuf -u http://FUZZ.mydomain.com -c -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt -fs 0
+    
+    vhost enumeration : 
+        - ffuf -u http://mydomain.com -c -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt -H 'Host: FUZZ.mydomain.com' -fs 0
+    
+    bruteforce password : 
+        - ffuf -u http://mydomain.com -c -w /usr/share/seclists/Passwords/Leaked-Databases/hak5.txt -X POST -d 'uname=admin&passwd=FUZZ&submit=Submit' -H 'Content-Type: application/x-www-form-urlencoded'
+
+    xxe + ssrf : 
+        ffuf -u http://mydomain.com -X POST -d '<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE foo [<!ENTITY xxe SYSTEM "http://localhost:FUZZ/" >]><name>&xxe;</name>'
+    

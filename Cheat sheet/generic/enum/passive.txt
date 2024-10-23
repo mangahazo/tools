@@ -1,0 +1,116 @@
+- identify address : 
+    - host DOMAIN
+    - nslookup DOMAIN
+    - traceroute DOMAIN
+
+- dns info :
+    - dnsrecon -d DOMAIN
+    - dig DOMAIN
+    - dig DNS_SERVER DOMAIN
+     
+- firewall detection : 
+    - wafw00f DOMAIN
+
+- whois : 
+    - syntax : whois DOMAIN/IP
+
+- website : 
+    - netcraft.com
+    - dnsdumpster.com
+
+- web technology :
+    - whatweb DOMAIN
+
+- web technology plugin :
+    - wappalizer
+    - builtwith
+
+- OSINT : 
+    - theHarverster -d DOMAIN -b google[,bing,yahoo,...]
+
+- subdomain enumeration:
+    - sublist3r -d DOMAIN
+    - google : site:*.DOMAIN -site:www.DOMAIN
+
+Passive reconnaissance
+(Gather public informations without engaging the target)
+    - whois (whois DOMAIN_NAME)
+        - listen on 43
+        - Registrar: Via which registrar was the domain name registered?
+        - Contact info of registrant: Name, organization, address, phone, among other things. (unless made hidden via a privacy service)
+        - Creation, update, and expiration dates: When was the domain name first registered? When was it last updated? And when does it need to be renewed?
+        - Name Server: Which server to ask to resolve the domain name?
+
+    - nslookup (nslookup [OPTIONS] DOMAIN_NAME [SERVER])
+        - SERVER: DNS SERVER
+            - cloudflare: 1.1.1.1, 1.0.0.1
+            - google: 8.8.8.8
+    - dig (dig DOMAIN_NAME TYPE)
+
+    - TYPE available for nslookup and dig: 
+        A	    IPv4 Addresses
+        AAAA	IPv6 Addresses
+        CNAME	Canonical Name
+        MX	    Mail Servers
+        SOA	    Start of Authority
+        TXT	    TXT Records
+
+    
+    - dnsdumpster (website)
+        - this enable finding subdomains
+    
+    - shodan.io (website)
+        - contain a database of 'things' that is connected
+        - can give : 
+            IP address
+            hosting company
+            geographic location
+            server type and version
+
+
+
+
+- info : 
+    - IP addresses
+    - Directory hidden from search engine
+    - names
+    - email addresses
+    - phone numbers
+    - physical addresses
+    - web technology used
+
+- get IP address : 
+    - host DOMAIN_NAME
+
+- hidden directory :
+    - robots.txt
+    - sitemap.xml/sitemaps.xml
+
+- web technology : 
+    - builtwith
+    - wappalizer
+    - whatweb
+    - httrack
+
+- whois : 
+    - syntax : whois IP_ADDRESS
+- netcraft
+- dnsrecon :
+    - dnsrecon -d DOMAIN_NAME
+        - A : IP V4
+        - AAAA : IP V6
+        - MX : Mail Server
+        - DNS : DNS Server
+- dnsdumpster
+- wafw00f
+- sublist3r :
+    - d DOMAIN_NAME
+    - e ENGINES(engine1,engine2,...)
+- google dorks
+    - site:DOMAIN_NAME
+    - inurl:KEYWORD
+    - intitle:KEYWORD
+    - filetype:FILE_TYPE
+- theHarvester
+- leaked password databases: 
+    - have I been pwned

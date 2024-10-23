@@ -1,0 +1,9 @@
+- SSL/TLS 
+    - Normally, an SSL/TLS certificate is generated to all of domains and subdomains of a website. this means that finding the checksum of a SSL/TLS certificate and finding its correspondance in http://crt.sh/ and https://ui.ctsearch.entrust.com/ui/ctsearchui can potentialy give some subdomains of a website
+
+- google
+    - Using google with the syntax : site:*.domain can result in listing subdomains of the domain. To exclude the root domain, use : -site:www.domain site:*.domain
+
+- brute force
+    - sometimes, bruteforcing with a wordlist is the solution.
+    - use : dnsrecon : fot this task

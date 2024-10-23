@@ -1,0 +1,47 @@
+- robots.txt :
+    - first all denied
+    - unusual allowed
+
+- favicon : 
+    - get the favicon
+         curl <TARGET-URL>/<PATH-TO>/favicon.ico | md5sum
+    - check the favicon hash in  
+        https://wiki.owasp.org/index.php/OWASP_favicon_database
+    
+- sitemap.xml : 
+    - check unusual path
+    - check for deprecated path but still working
+
+- http header : 
+    - request the url : 
+        curl <TARGET-URL> -v
+    - check for application version in : 
+        X-Powered-By
+        Server
+
+- framework stack : 
+    - after finding the framework(with the above methods), go to the framework page and RTFM
+
+- OSINT: 
+    - Dorking : 
+        site:<TARGET-DOMAIN> [KEYWORD]: only search for KEYWORD in TARGET-DOMAIN
+        inurl:<KEYWORD> : only find all site with KEYWORD in url
+        filetype:<EXTENSION> : only find for all files content with extension EXTENSION
+        intitle:<KEYWORD> : only find for all site with the KEYWORD in the title 
+    - stack version : 
+        - wappalizer / builtwith : get the stack used by the website and its version if available
+    - wayback machine : 
+        - watch how whe website was in the past
+        - https://archive.org/web/
+    - github : 
+        - understand the stack
+        - potential credentials
+        - understand the project
+    - s3 buckets :
+        - test for permissions : read/write
+        - bruteforce : http(s)://<POTENTIAL-NAME>.s3.amazonaws.com
+
+- Automated tools : 
+    - ffuf 
+    - gobuster
+    - dirb

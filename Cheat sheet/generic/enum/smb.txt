@@ -1,0 +1,87 @@
+- target port: 445
+- useful nmap script : 
+    - smb-os-discovery
+    - smb-protocols
+    - smb-security-mode
+    - smb-enum-sessions
+        - list active sessions
+        - --script-args smbusername=USERNAME,smbpassword=PASSWORD
+    - smb-enum-users
+        - list windows users
+    - smb-enum-shares
+        - enumerate available shares
+        - if find an IPC session, it is a null session. Like an anonymous one
+        - --script-args smbusername=USERNAME,smbpassword=PASSWORD
+    - smb-server-stats
+        - get server statistics
+        - --script-args smbusername=USERNAME,smbpassword=PASSWORD
+    - smb-enum-groups
+        - get available user groups
+    - smb-enum-domains
+        - list available domains
+        - --script-args smbusername=USERNAME,smbpassword=PASSWORD
+    - smb-ls
+        - list a specific folder
+        - generally used with smb-enum-shares which list all available shares and then doing ls for any of them
+        - --script-args smbusername=USERNAME,smbpassword=PASSWORD
+    - smb-enum-services
+        - enumerating services
+        - --script-args smbusername=USERNAME,smbpassword=PASSWORD
+- to pass args to script : 
+    - --script-args key1=value1[,key2=value2,...]
+
+- smbmap : 
+    - script to enumerate smb
+    - syntax : smbmap -u USERNAME(ex : guest) -p PASSWORD( ex : '') -d DIRECTORY(ex: .) -H IP_ADDRESS [-x COMMAND_TO_RUN(ex: ipconfig)] --upload LOCAL_PATH(ex : /root/file.txt) REMOTE_PATH(ex: C$\backdoor) --download REMOTE_PATH -L(list all available drive) -r REMOTE_DRIVE_NAME(list the drive : ex : 'C$')
+
+    - note : in remote path, the :\ is replaced with $\ and file.txt is uploaded as backdoor
+    - to download a file, add the '' to the name of the folder, otherwise, it will not work
+
+- msfconsole
+    - auxiliary : 
+        - scanner/smb/smb_version
+        - scanner/smb/smb_login
+        - scanner/smb/smb2
+        - scanner/smb/smb_enumusers
+        - scanner/smb/smb_enumshares
+    - useful password list : 
+        -  /usr/share/wordlists/metasploit/unix_passwords.txt
+
+- nmblookup
+    - syntax : 
+        nmblookup -A REMOTE_HOST
+
+- smbclient
+    - syntax : 
+        - connect to the remote host
+            - smbclient //REMOTE_HOST/SHARE -N
+        - enumerate the remote host : 
+            - smbclient -L REMOTE_HOST -N
+            - list all users who can connect anonymously in the smb
+        - -N : no username, no password
+
+- rpcclient 
+    - syntax : 
+        - rpcclient -U '' -N REMOTE_HOST
+        - this tries to connect with no username and no password
+        - After getting a session with rpcclient: 
+            - srvinfo : get the OS information
+            - enumdomusers : get lists of users in smb
+            - lookupnames USERNAME : get info of a username
+            - enumdomgroups : list all groups
+
+- enum4linux
+    - syntax : 
+        - enum4linux -o REMOTE_HOST
+            - -S : list shares
+            - -G : list groups
+            - -i : list all printers
+
+- hydra bruteforce : 
+    - syntax : hydra -t 5 -V -f -l admin -P /usr/share/wordlists/rockyou.txt 192.160.173.3 smb
+
+
+- connect to smb server using cmd : 
+    net use <PATH|DRIVE-NAME> \\<IP>\<SHARE> [PASSWORD] /user:<USERNAME>
+- remove smb from local drive : 
+    net use \\<IP>\<SHARE> /delete

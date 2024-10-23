@@ -1,0 +1,29 @@
+- msfconsole
+- db_status
+- setg RHOST TARGET_IP
+- setg RHOSTS TARGET_IP
+- setg LHOST ATTACKER_IP
+- workspace -a vulns
+- db_nmap -sS -sV -O TARGET_IP
+- hosts
+- services
+- search type:exploit name:microsoft informations
+- searchsploit "Microsoft windows smb" | grep -e "Metasploit"
+- search eternalblue
+- plugin to automate vulnerability search :     
+    - https://github.com/hahwul/metasploit-autopwn
+    - this interact directly with the data gathered(nmap or auxiliary modules) on the database of the current workspace
+    - mv db_autopwn.rb /usr/share/metasploit-framework/plugins
+    - in msfconsole: 
+        - load db_autopwn
+        - db_autopwn : help 
+
+informations gathered : 
+        - hosts :
+            - all hosts 
+        - services : 
+            - all services
+        - loot : 
+            - data gathered
+        - creds : 
+            - all credentials gathered

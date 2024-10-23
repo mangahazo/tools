@@ -1,0 +1,35 @@
+- null scan : -sN
+    - do not send any flag
+        - do not receive response : open|filtered port
+        - receive RST flag : closed port
+    - need root privilege
+    - used to trick a stateless firewall(firewall that check a SYN flag)
+- FIN scan : -sF
+    - send a TCP FIN
+    - work like null scan
+- xmas scan : -sX
+    - send URG, PSH, FIN simultaneously.
+    - work like null scan
+- ack scan : -sA
+    - useful to determine the rule of the firewall
+- window scan : -sW
+    - most likely the same as ack scan
+- custom scan : --scanflags [FLAGS]
+    - FLAGS can be any flag with no separator:
+        - ex : for SYN and FIN: 
+            --scanflags SYNFIN
+- spoofed ip : -S SPOOFED_IP
+    - send a request with a SPOOFED_IP and the response will be send to the SPOOFED_IP
+    - in real world use this with -e and -Pn
+        - e : explicitely give the interface
+        - Pn : disable ping scan
+- spoofed mac : -spoof-mac SPOOFED_MAC
+    - use the same behavior as spoofed ip but with mac address
+    - only if in the same subnet
+- decoy : -D [MANY_RANDOM_IP],MY_IP
+    - send the result to many other destination so the network won't really know who is scanning the network
+- fragment ip data: -f
+    - the IP data is fragmented to 8 bytes
+    - using -ff instead of -f will divide the IP data to 16 bytes
+- zombie scan : -sI ZOMBIE_IP
+    - work like the scan is comming from the ZOMBIE_IP

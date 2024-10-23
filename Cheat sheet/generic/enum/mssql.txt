@@ -1,0 +1,8 @@
+msfconsole
+    - scanner/mysql/mssql_login
+        - PASS_FILE PASS_FILE
+        - USER_FILE USER_FILE
+    - admin/mssql/mssql_enum
+    - admin/mssql/mssql_enum_sql_logins
+    - admin/mssql/mssql_exec
+        - cmd CMD

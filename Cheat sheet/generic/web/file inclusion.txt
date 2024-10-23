@@ -1,0 +1,3 @@
+- LFI : get the content of file on the local system of the website.
+    - path traversal : 
+        - find the access point : something like some_random_url?file=my_file. In this situation, use the .. to traverse the directory of the website.

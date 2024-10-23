@@ -1,0 +1,23 @@
+# targets :
+    Users and groups
+    Hostnames
+    Routing tables
+    Network shares
+    Network services
+    Applications and banners
+    Firewall configurations
+    Service settings and audit configurations
+    SNMP and DNS details
+    Hunting for credentials (saved on web browsers or client applications)
+
+# smb
+    # list share
+    net share
+
+    # copy file
+    copy \\<IP>\<SHARE>\<PATH-TO-FILE> C:\Temp\[OTHER-PATH]
+
+# Windows defender & firewall & AV
+    sc query windefend
+    sc stop WinDefend
+    netsh advfirewall show allprofiles

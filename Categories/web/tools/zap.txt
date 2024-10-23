@@ -1,0 +1,13 @@
+installation : 
+    - https://www.zaproxy.org/download/
+
+automated scan : 
+    start : Ctrl + alt + O
+    - traditionnal 
+        - quiter
+    - ajax
+        - bruteforce
+        - setup 
+            sudo apt install libjenkins-htmlunit-core-js-java
+            select HtmlUnity from the Ajax Spider Dropdown.
+    

@@ -1,0 +1,38 @@
+1 - Analyse manuel(visuel/auditif)
+    - paint(img)
+    - stegsolve.jar(img)
+    - audacity(mp3)
+    - steganabra
+2 - Meta data
+    - file
+    - exiftool
+
+3 - Hidden data strings
+    - strings
+
+4 - Hidden binary
+    - binwalk
+    - scalpel
+    - steghide
+        - jpg
+        - need password
+
+5 - Least significant bit
+    - stegsolve
+
+6 - Reverse image search : 
+    - tineye(online)
+
+7 - chunk png
+    - pngcheck -vtp7
+
+8 - Online 
+    - https://stegonline.georgeom.net
+    - https://apersolve.fr
+
+    - Error Level Analysis
+        - https://fotoforensics.com (jpg)
+    
+    - Fast Fourier Transform
+        - http://bigwww.epfl.ch/demo/ip/demos/FFT/
+        - https://ejectamanta.com/imaging-experiments/fourifier/

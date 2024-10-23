@@ -1,0 +1,3 @@
+- tar : 
+    tar -zcvf <DEST-PATH>.tar.gz <SRC-FOLDER> : compress
+    tar -xvf <PATH>.tar.gz : decompress

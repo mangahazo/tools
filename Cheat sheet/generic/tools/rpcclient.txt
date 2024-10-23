@@ -1,0 +1,4 @@
+- rpcclient -U -N TARGET_IP
+    - srvinfo
+    - lookupnameS USERNAME
+    - enumdomgroups

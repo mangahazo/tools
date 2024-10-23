@@ -1,0 +1,11 @@
+- Allow other users to see/edit some data belonging to other users
+- In the url if finding something like url_of_the_site?id=[value]
+    - Value can be number <=> can be edited simply
+    - Value can be encoded/hashed <=> decode the data > edit it > reincode it
+        - for base64 encoded : https://www.base64decode.org/
+        - for hashed : https://crackstation.net/
+    - Value can be unpredictable:
+        - create 2 accound and swap the id of the 2 account. If it work, this means that there is an IDOR
+- The url_of_the_site can be in the navigator on in an endpoint. 
+    - some_part_of_the_url/[value]/other_part
+    - some_part_of_the_url/?some_request=[value]

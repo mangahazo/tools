@@ -1,0 +1,31 @@
+- find valid username
+    - go to register form and enter some well known username like some first name, admin, root, user
+        - this can be done manually
+        - this can also be done by using automation tools:
+            - ffuf: 
+                - code : ffuf -w /path_to_wordlist -X POST -d "username=FUZZ&email=x&password=x&cpassword=x" -H "Content-Type: application/x-www-form-urlencoded" -u url_of_the_signup_page -mr [error_message_wanted]
+                - arguments : 
+                    - w : wordlist
+                    - X : method [GET/POST]. If not precised default it is GET
+                    - d : data to fuzz. The data will be fuzzed in the FUZZ
+                    - H : content-Type
+                    - u : url
+                    - mr: wanted error message
+
+- use the valid username finded above to bruteforce the password
+    - generate a valid username as wordlist
+    - use fuzzing tools to fuzz the valid credential:
+        - ffuf : 
+            - code : ffuf -w valid_usernames.txt:W1,/passwords_wordlist:W2 -X POST -d "username=W1&password=W2" -H "Content-Type: application/x-www-form-urlencoded" -u url_to_login -fc 200
+
+- Logic flaw
+    - This technic is used to avoid to pass through the wanted feature of the website.
+    - It can be found on any part of a website. It can be used to connect to the app by avoiding to pass through the login page or to see other users account with one connected app.
+    - Some tips can be used:
+        - sending POST data with the same name as GET parameters because PHP prioritize POST rather than GET.
+        - Some logic of the website site can be abused.
+
+- Cookie tampering
+    - plain text : Cookies may be stored in plain text so, it can possibly be changed directelly.
+    - hashed : use https://crackstation.net/ to try to find the hash of the cookie and hash it again after altering the data
+    - encoded : use 

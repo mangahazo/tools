@@ -1,0 +1,99 @@
+clear terminal : 
+    - clear
+
+print content :
+    - cat
+
+current directory : 
+    - pwd
+
+list files :
+    - ls : 
+        - a : all
+        - h : human readable
+        - l : list
+        - R : recursive
+
+move : 
+    - cd :
+        - .. : parent
+        - ~ : HOME
+
+create : 
+    - touch 
+    - echo > <FILE> 
+    - nano <FILE>
+
+copy : 
+    - cp
+
+info about command : 
+    - whatis : basic information
+    - man : manual
+    - which : path of binary
+
+print text : 
+    - echo 
+
+remove file : 
+    - rm 
+        - r : recursive
+        - f : force
+        - i : interactive
+        - v : verbose
+
+copy file : 
+    - cp : cp <SRC> <DEST>
+
+move file / rename : 
+    - mv : mv <SRC> <DEST>
+
+change permission : 
+    - chmod
+        - r : read
+        - w : write
+        - x : execute
+        - R : recursive
+
+ownership : 
+    - chown : change owner 
+        - <USER> <FILE> : change the owner to USER
+        - <USER>:<GROUP> <FILE> : change the owner and group to USER and GROUP
+    - chgrp : change group 
+        - <GROUP> <FILE> : change the group to GROUP
+
+search pattern in file : 
+    - grep :
+        - <PATTERN> <DIRECTORY> : search pattern in DIRECTORY
+        - <SOMETHING> | greo <PATTERN> : search pattern in the output of SOMETHING
+        - type : type of file 
+            - f : file
+            - d : directory
+        - name <NAME> : name of file
+        - iname <NAME> : name case insensitive
+        - size : size of file
+            - +1M : superior to 1 Mo
+            - -1k : inferior to 1K
+            - 3M : 3 Mo
+        - perm : permission
+            - 600 : permission of 600
+        - exec <COMMAND> {} + : execute COMMAND for each result
+find file : 
+    - locate :
+        - --all : match whole word
+        - c : only count
+        - i : case insensitive
+    - find : 
+        - <DIRECTORY> <PATTERN> : find file with patterin in directory
+
+system info : 
+    - whoami : current user
+    - hostname : current host
+    - id  [USER]: identity of USER/current user
+    - groups [USER] : all groups of the USER/current user 
+    - lsb_release : distro info on debian
+    - cat /etc/issue : distro info
+    - cat /etc/*release : linux and distro info
+    - lscpu : cpu info
+    - uname -a : architecture info
+

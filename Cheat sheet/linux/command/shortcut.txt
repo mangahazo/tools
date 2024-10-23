@@ -1,0 +1,26 @@
+open terminal : 
+    - ctrl + alt + t
+    - super + t
+
+tiling :
+    - super + arrow
+
+font size :
+    - increase : ctrl + +
+    - decrease : ctrl + -s
+
+end process :
+    - ctrl + c
+
+pause process : 
+    - ctrl + z
+
+autocomplete : 
+    - tab
+
+suggestion :
+    - tab tab
+
+close terminal : 
+    - ctrl + alt + w
+    - ctrl + d

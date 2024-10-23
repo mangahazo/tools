@@ -1,0 +1,2 @@
+- evil-winrm
+    - syntax : rm -u USER -p PASSWORD -i HOST

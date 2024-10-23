@@ -1,0 +1,3 @@
+windows exploit suggester : https://github.com/AonCyberLabs/Windows-Exploit-Suggester
+windows kernel exploits : https://github.com/SecWiki/windows-kernel-exploits
+UACME : https://github.com/hfiref0x/UACME

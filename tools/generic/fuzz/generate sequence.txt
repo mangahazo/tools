@@ -1,0 +1,6 @@
+ruby -e '(0..255).each{|i| puts i}'
+ruby -e 'puts (0..255).to_a'
+for i in {0..255}; do echo $i; done
+seq 0 255
+cook '[0-255]'
+python -c "for i in range(0,256):print(i)"

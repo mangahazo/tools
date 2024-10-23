@@ -1,0 +1,18 @@
+- Source code 
+    - find useful comments
+        - comment about how the app works
+        - reminder of what should be done
+        - credentials left over
+        - commented part of an existing app
+    - hidden fields
+        - hidden link
+        - hidden forms
+- Inspected elements : source code and web site is not always the same
+    - hidden elements
+- Network devtools : analyse AJAX call
+- Manual exploration
+    - map the web page
+    - need to create a sitemap of the web app : 
+        path1 => description1
+        path2 => description2
+        path3 => description3

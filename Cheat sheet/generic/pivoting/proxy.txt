@@ -1,0 +1,18 @@
+- proxychains
+    - command : proxychains COMMAND [**args]
+    - configuration files : 
+        - ./proxychains.conf
+        - ~/.proxychains/proxychains.conf
+        - /etc/proxychains.conf
+    - syntax : 
+        [ProxyList]
+        socks4  127.0.0.1 9050
+        <socks4|socks5|http> IP_ADDRESS PORT
+    - features : 
+        - only TCP scan are allowed (no UDP, ICMP, SYN, ...)
+        - very slow
+
+- web proxy (foxyproxy):
+    - features : 
+        - is only used to tunnel all web requests
+        - better than proxychains for web requests

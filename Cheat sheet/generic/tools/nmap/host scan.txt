@@ -1,0 +1,19 @@
+- ARP request : only used in a subnet,
+- PING request : if it's the first time to send a request, an arp request is send before a ping request
+- nmap 
+    - syntax: nmap [OPTIONS] IP/IP_RANGE/subnet
+    - OPTIONS: 
+        - PR : use ARP requests
+        - sn : do not follow port scanning
+        - PE : discover live host
+        - PP : use ICMP timestamp
+        - PM : use address mask requests
+        - PS[PORT] : use TCP SYN on port PORT 
+            - ex: nmap -PS80 send a TCP SYN on port 80
+            - ex: nmap -PS80,443 send a TCP SYN on port 80 and 443
+        - PA : use TCP ACK (only used as root else it use 3 way handshake)
+        - PU : use UDP PING (only with root)
+            - if active: no response
+            - else: response : ICMP PORT UNREACHABLE
+        - n : skip reverse-dns (by default nmap use reverse-dns on ONLINE hosts)
+        - R : enable reverse-dns on OFFLINE hosts 

@@ -1,0 +1,5 @@
+- user creation 
+    net user <USERNAME> <PASSWORD> /add
+
+- add user to group
+    net localgroup <GROUP> <USERNAME> /add

@@ -1,0 +1,25 @@
+apache : 
+    - upload .htaccess
+        content : AddType application/x-httpd-php .lol
+    - upload a file with extension .lol
+    - upload php variants : 
+        php
+        phtml
+        php4
+        php5
+        php7
+        phps
+        php-s
+        pht
+        phar
+    - upload php variants :
+        pHp
+        phTMl
+        PHp4
+        phP5
+        pHp7
+        pHpS
+        phP-S
+        PhT
+        phar
+    

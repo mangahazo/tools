@@ -1,0 +1,6 @@
+- nishang 
+    - github : https://github.com/samratashok/nishang
+
+# weaponization
+- luckystrike 
+        - installation : https://github.com/curi0usJack/luckystrik

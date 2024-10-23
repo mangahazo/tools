@@ -1,0 +1,50 @@
+# manual
+    history
+    cat ~/*.history
+    ifconfig
+    ip -a
+    ip route
+    uname -a
+    cat /proc/version
+    cat /etc/*issue
+    cat /etc/*release*
+    netstat -pentula
+    id
+    cat /etc/passwd | grep sh$
+    dpkg -l
+    hostname
+    env
+    lscpu
+    free -h
+    df -h
+    lsblk | grep sd
+    # creds : 
+        - cat /etc/passwd 
+        - cat /etc/shadow 
+        - /etc/group
+    
+    # emails 
+    ls -lh /var/mail/
+    # installed binaries : 
+        - all :  cat /bin/* /usr/bin/* /usr/sbin/* /sbin/* /usr/local/bin/* /usr/local/sbin/*
+        - debian : dpkg -l
+        - rpm : rpm -qa
+    - users :
+        - all users : cat /etc/passwd
+        - logged in users : who
+        - logged in users and their action : w
+        - last logged in : last
+    - Networks :
+        - ip addresses : ip a s
+        - dns config : cat /etc/resolv.conf
+        - connexions :
+            - netstat : netstat -tuplen
+            - lsof : lsof -i 
+    - services :
+        - all services : pspy
+        - all current services : ps aux / ps axjf
+        
+
+# automated
+    wget https://raw.githubusercontent.com/mzet-/linux-exploit-suggester/master/linux-exploit-suggester.sh -O les.sh
+    wget https://github.com/peass-ng/PEASS-ng/releases/download/20240804-31b931f7/linpeas.sh

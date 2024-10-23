@@ -1,0 +1,9 @@
+whatweb TARGET_IP
+http TARGET_IP
+dirb TARGET_URL [WORDLISTS]
+curl TARGET_URL
+wget TARGET_URL
+msfconsole 
+    - scanner/http/http_version
+    - scanner/http/brute_dirs
+    - scanner/http/robots_txt

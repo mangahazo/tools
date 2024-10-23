@@ -1,0 +1,20 @@
+web extension : 
+    Discovery/Web-Content/web-extensions.
+
+file : 
+    Discovery/Web-Content/raft-medium-files-lowercase.txt
+    Discovery/Web-Content/raft-medium-files.txt
+
+directory : 
+    Discovery/Web-Content/raft-medium-directories-lowercase.txt
+
+parameter : 
+    Discovery/Web-Content/raft-medium-words-lowercase.txt
+    Discovery/Web-Content/burp-parameter-names.txt
+
+passwords : 
+    Passwords/Leaked-Databases/hak5.txt
+
+subdomain/vhosts : 
+    Discovery/DNS/subdomains-top1million-5000.txt
+

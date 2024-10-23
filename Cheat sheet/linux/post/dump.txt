@@ -1,0 +1,34 @@
+- hash dumping : 
+    - algo : 
+        - $1 : MD5
+        - $2 : Blowfish
+        - $5 : sha256
+        - $6 : sha512
+    - interesting file : 
+        - /etc/passwd : usernames
+        - /etc/shadow : hashes
+    - meterpreter :
+    - msfconsole :
+        - post : 
+            - linux/gather/hashdump
+            - multi/gather/ssh_creds
+            - multi/gather/docker_creds
+            - linux/gather/hashdump
+            - linux/gather/ecryptfs_creds
+            - linux/gather/enum_psk
+            - linux/gather/enum_xchat
+            - linux/gather/phpmyadmin_credsteal
+            - linux/gather/pptpd_chap_secrets
+            - linux/manage/sshkey_persistence
+
+            - linux/gather/enum_configs
+            - multi/gather/env
+            - linux/gather/enum_network
+            - linux/gather/enum_protections
+            - linux/gather/enum_system
+            - linux/gather/checkcontainer
+            - linux/gather/checkvm
+            - linux/gather/enum_users_history
+            - multi/manage/system_session
+            - linux/manage/download_exec
+        - requirements : need privileged session
