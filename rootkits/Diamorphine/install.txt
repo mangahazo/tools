@@ -1,2 +1,0 @@
-- install linux headers : 
-    yum install kernel-devel
